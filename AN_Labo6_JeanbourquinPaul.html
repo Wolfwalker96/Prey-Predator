@@ -1,0 +1,172 @@
+<!--
+    Numerical Algorithm - 6nd Labo.
+    Paul Jeanbourquin, INF2dlm-a.
+    15.05.2017
+-->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <script src="AN_Labo6_JeanbourquinPaul.js" ></script>
+  <script src=js/d3.v3.min.js /></script>
+  <script src=js/function-plot.js /></script>
+  <title>AN_Labo6_JeanbourquinPaul</title>
+  <style>
+    /*
+     *  Just for a "real" table.
+     */
+    td,th{
+      border:solid black 1px;
+      padding-left: 1em;
+      padding-right: 1em;
+      text-align: right;
+    }
+    th{
+      border-bottom: double 2px black;
+    }
+    table{
+      border-collapse: collapse;
+    }
+
+    /*
+     *  Because it's prettier.
+     */
+
+    p{
+      width: 600px;
+      text-align: justify;
+    }
+    .cards:first-of-type{
+      margin-left: 0px;
+    }
+    .cards{
+      display: inline-block;
+      padding-left: 10px;
+      padding-right: 10px;
+      margin-bottom: 10px;
+    }
+    .cards .cards{
+      border-left: solid black 1px;
+    }
+    .cards .cards:first-of-type{
+      border-left: none;
+    }
+    .cards h1, .cards svg .title{
+      font-size: 14px;
+      font-weight: bold;
+      border-top: solid black 1px;
+      padding-top: 5px;
+      text-align: center;
+    }
+    .cards h1:first-of-type, .cards svg .title:first-of-type{
+        border-top: none;
+    }
+    input{
+      display: block;
+      width:100%;
+    }
+    input[type=button]{
+      margin: auto;
+      width:80%;
+    }
+  </style>
+</head>
+<body id=body>
+  <h1>Algorithme Numérique Labo 6 - Proie-Prédateur</h1>
+  <div style="font-size:1.4em;"> Paul Jeanbourquin, INF2dlm-a</div>
+  <hr />
+  <div id=function-plot class="cards"></div>
+  <div class="cards">
+    <h1>Configuration de la simulation</h1>
+    <div class="cards">
+      <h1 style="color:blue;">Prédateurs</h1>
+      <label>Naissance : <input type="text" value="0.05" id="born_pred"/></label>
+      <label>Mortalité : <input type="text" value="0.3" id="mortality_pred"/></label>
+      <h1 style="color:red;">Proies</h1>
+      <label>Naissance : <input type="text" value="0.5" id="born_prey"/></label>
+      <label>Mortalité : <input type="text" value="0.15" id="mortality_prey"/></label>
+    </div>
+    <div class="cards">
+      <h1>Populations initiales</h1>
+      <label>Prédateurs : <input type="text" value="10" id="init_pred"/></label>
+      <label>Proies : <input type="text" value="20" id="init_prey"/></label>
+      <h1>Euler</h1>
+      <label>Temps maximum : <input id="tMax" type="text" value="30"/></label>
+      <label>Différence de temps : <input id="tDelta" type="text" value="0.01"/></label>
+    </div>
+    <input type=button value="Mettre les graphes à jours" id=btnExec />
+  </div>
+  <div id=biomass-plot class="cards"></div>
+
+  <hr />
+  <footer>
+    This document is certified 100% HTML5 valid by <a href="https://validator.w3.org">W3C Validator</a>.
+  </footer>
+  <script>
+  function updateSimulation(){
+    let h = Number(tDelta.value);
+    let n = Number(tMax.value) / h ;
+    let values = simulate(Number(born_prey.value),Number(mortality_prey.value),Number(born_pred.value),Number(mortality_pred.value),Number(init_pred.value),Number(init_prey.value),h,n);
+    let points = [];
+    points['prey'] = [];
+    points['predator'] = [];
+    values['prey'].forEach(function(val, i){
+      points['prey'].push([values['time'][i],val]);
+    });
+    values['predator'].forEach(function(val, i){
+      points['predator'].push([values['time'][i],val]);
+    });
+
+    functionPlot({
+      target: '#function-plot',
+      title:"Evolution des biomasses en fonction du temps",
+      xAxis:{
+        label:"Temps (t)",
+        domain:[0,Number(tMax.value)]
+      },
+      yAxis:{
+        label:"Biomasse",
+        domain:[0,Math.max(Math.max(...values['prey']), Math.max(...values['predator']))]
+      },
+      data: [{
+        points: points['prey'],
+        fnType: 'points',
+        graphType: 'polyline',
+        color:'red'
+      },{
+        points: points['predator'],
+        fnType: 'points',
+        graphType: 'polyline',
+        color:'blue'
+      }]
+    })
+
+    let points2 = [];
+
+    values['prey'].forEach(function(val,index){
+      points2.push([val,values['predator'][index]]);
+    });
+
+    functionPlot({
+      target: '#biomass-plot',
+      title: "Visualisation des biomasses",
+      xAxis:{
+        label:"Proie",
+        domain:[0,Math.max(...values['prey'])]
+      },
+      yAxis:{
+        label:"Prédateur",
+        domain:[0,Math.max(...values['predator'])]
+      },
+      data: [{
+        points: points2,
+        fnType: 'points',
+        graphType: 'polyline'
+      }]
+    })
+  }
+  btnExec.addEventListener("click",function(){updateSimulation();});
+  updateSimulation();
+  </script>
+</body>
+</html>
