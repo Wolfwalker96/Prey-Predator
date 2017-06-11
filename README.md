@@ -34,7 +34,7 @@ Files
 
 * **AN_Labo6_JeanbourquinPaul.html** Program view
 * **AN_Labo6_JeanbourquinPaul.js**  Script
-* **AN_Labo6_JeanbourquinPaul.pdf** Report of the laboratory
+* **AN_Labo6_JeanbourquinPaul.pdf** Report of the laboratory (written in French)
 * **js/** Some useful libraries
 
 Conclusion
