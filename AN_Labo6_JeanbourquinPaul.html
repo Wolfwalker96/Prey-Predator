@@ -75,6 +75,25 @@
   <h1>Algorithme Numérique Labo 6 - Proie-Prédateur</h1>
   <div style="font-size:1.4em;"> Paul Jeanbourquin, INF2dlm-a</div>
   <hr />
+  <h2>Mode d'emploi</h2>
+  <h3>Configuration</h3>
+    <p>
+      La simulation se configure avec les input du bloc central.
+    </p>
+    <p>
+      Les configuration des coefficients de naissance et de mortalité
+      peuvent conduire à des famines.
+    </p>
+    <p>
+      Les paramètres de la méthode de Euler font varié fortement
+      le temps de calculs et le risque que l'onglet ne réponde plus.
+      Veillez à utiliser un multiple de la difference de temps dans temps maximum.
+    </p>
+  <h3>Utilsation</h3>
+  <p>
+    Une fois configuré, appuyer sur Mettre à jour les graphes pour voir la nouvelle simulation.
+  </p>
+  <hr />
   <div id=function-plot class="cards"></div>
   <div class="cards">
     <h1>Configuration de la simulation</h1>
@@ -105,7 +124,7 @@
   <script>
   function updateSimulation(){
     let h = Number(tDelta.value);
-    let n = Number(tMax.value) / h ;
+    let n = Number(tMax.value) / h ; // Définit l'argument n
     let values = simulate(Number(born_prey.value),Number(mortality_prey.value),Number(born_pred.value),Number(mortality_pred.value),Number(init_pred.value),Number(init_prey.value),h,n);
     let points = [];
     points['prey'] = [];
